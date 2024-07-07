@@ -18,7 +18,8 @@ from functions.openai_requests import convert_audio_to_text, get_chat_response
 from functions.database import store_messages, reset_messages
 
 ## Set your OpenAI credentials directly
-
+openai.organization = "org-MJBa6RAUrspCcq6sxiMr7KXZ"
+openai.api_key = "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"
 
 # Initiate App
 app = FastAPI()
@@ -183,3 +184,21 @@ async def post_text_game(request: TextRequest):
 
         return chat_response
 
+
+
+@app.post("/post-text-to-text/", response_model=dict)
+async def post_text(request: TextRequest):
+    try:
+        logging.info(f"Received text: {request.text}")
+
+        # Get chat response
+        chat_response = get_chat_response(request.text)
+        logging.info(f"Chat response: {chat_response}")
+
+        # Store messages
+        store_messages(request.text, chat_response)
+        
+        return {"response": chat_response}
+    except Exception as e:
+        logging.error(f"Error occurred: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

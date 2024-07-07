@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from './Title';
 import axios from 'axios';
-import RecordMessage from './RecordMessage';
 import Select, { SingleValue } from 'react-select';
 import { ActionMeta } from 'react-select';
 
@@ -13,6 +12,7 @@ const Mute = () => {
   const [selectedVoice, setSelectedVoice] = useState('Jarvis');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
+  const [inputText, setInputText] = useState('');
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
@@ -55,13 +55,12 @@ const Mute = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          responseType: 'text', // Change responseType to 'text'
+          responseType: 'text',
         }
       );
 
-      // Assuming response.data contains the text response from the server
-      const textResponse = response.data;
-      const textMessage = { sender: 'Jarvis', content: textResponse }; // Use content instead of blobUrl for text messages
+      const textResponse = response.data.response;
+      const textMessage = { sender: 'Jarvis', content: textResponse };
       setMessages((prevMessages) => [...prevMessages, textMessage]);
     } catch (error) {
       console.error('Error occurred during game selection post:', error);
@@ -70,49 +69,39 @@ const Mute = () => {
     }
   };
 
-  const handleStop = async (blobUrl: string) => {
+  const handleTextSubmit = async () => {
+    if (!inputText) return;
+
     setIsLoading(true);
-    const myMessage = { sender: 'me', blobUrl };
-    const messagesArr = [...messages, myMessage];
 
-    // Fetch the audio blob
-    fetch(blobUrl)
-      .then((res) => res.blob())
-      .then(async (blob) => {
-        // Create a FormData object and append the audio blob
-        const formData = new FormData();
-        formData.append('file', blob, 'myFile.wav');
+    // Add user's message to the message list
+    const userMessage = { sender: 'Me', content: inputText };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        try {
-          // Send the audio file to the backend for processing
-          const response = await axios.post(
-            'http://localhost:8000/post-text-text',
-            formData,
-            {
-              params: { voice: selectedVoice },
-              headers: {
-                'Content-Type': 'audio/mpeg',
-              },
-            }
-          );
+    try {
+      const voice = selectedVoice;
 
-          // Extract the transcribed text from the response
-          const transcribedText = response.data;
-
-          // Add the transcribed text to messages
-          const speakerMessage = {
-            sender: 'Jarvis', // Assuming the response is from the Jarvis AI
-            content: transcribedText,
-          };
-          messagesArr.push(speakerMessage);
-          setMessages(messagesArr);
-
-          setIsLoading(false);
-        } catch (error) {
-          console.error('Error occurred while processing audio:', error);
-          setIsLoading(false);
+      const response = await axios.post(
+        'http://localhost:8000/post-text-to-text/',
+        { text: inputText, voice },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          responseType: 'json',
         }
-      });
+      );
+
+      const textResponse = response.data.response;
+      const textMessage = { sender: 'Jarvis', content: textResponse };
+      setMessages((prevMessages) => [...prevMessages, textMessage]);
+
+      setInputText(''); // Clear the input field after sending the message
+    } catch (error) {
+      console.error('Error occurred during text submission:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   function createBlobURL(data: any) {
@@ -195,9 +184,7 @@ const Mute = () => {
           {messages?.map((message, index) => (
             <div
               key={index}
-              className={`flex flex-col ${
-                message.sender === 'Jarvis' ? 'items-end' : ''
-              }`}
+              className={`flex flex-col ${message.sender === 'Jarvis' ? 'items-end' : 'items-start'}`}
             >
               <div className='mt-4'>
                 {message.sender === 'Jarvis' ? (
@@ -209,14 +196,7 @@ const Mute = () => {
                     {message.sender}
                   </div>
                 )}
-                {message.blobUrl ? (
-                  <audio controls className='ml-2'>
-                    <source src={message.blobUrl} type='audio/mpeg' />
-                    Your browser does not support the audio element.
-                  </audio>
-                ) : (
-                  <p className='ml-2'>{message.content}</p>
-                )}
+                <p className='ml-2'>{message.content}</p>
               </div>
             </div>
           ))}
@@ -236,8 +216,20 @@ const Mute = () => {
 
         <div className='fixed bottom-0 w-full py-6 border-t text-center bg-gradient-to-r from-sky-500 to-indigo-500'>
           <div className='flex justify-center items-center w-full'>
-            <div>
-              <RecordMessage handleStop={handleStop} />
+            <div className='flex flex-col items-center w-full px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto'>
+              <input
+                type='text'
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className='border rounded px-4 py-2 mb-2 w-full'
+                placeholder='Type your message here...'
+              />
+              <button
+                onClick={handleTextSubmit}
+                className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full'
+              >
+                Send Message
+              </button>
             </div>
           </div>
         </div>
@@ -270,7 +262,6 @@ const Mute = () => {
               </button>
               <button
                 onClick={() => handleSourdMalentendantOption('mute')}
-
                 className='block w-full text-left px-4 py-2 hover:bg-gray-100'
               >
                 <img

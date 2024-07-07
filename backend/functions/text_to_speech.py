@@ -1,6 +1,7 @@
 import requests
 
 
+ELEVEN_LABS_API_KEY = "3b713e13198c8fc388c2981500998efe"
 # 1ns94GwK9YDCJoL6Nglv Nicolas
 # AmMsHJaCw4BtwV3KoUXF Sam
 def convert_text_to_speech(message, selected_voice):
