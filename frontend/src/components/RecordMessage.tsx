@@ -22,19 +22,17 @@ const RecordMessage = ({ handleStop }: Props) => {
 
   /*Add the isRecording and handleStopCalled states*/
   const [isRecording, setIsRecording] = useState(false);
-  /*Add the handleStopCalled state to check if the handleStop function has been called*/
   const [handleStopCalled, setHandleStopCalled] = useState(false);
+  const [lastCommandTime, setLastCommandTime] = useState<number>(0);
 
   useEffect(() => {
     if (localMediaBlobUrl && mediaBlobUrl && !isRecording && !handleStopCalled) {
       handleStop(localMediaBlobUrl);
-      /*Reset the localMediaBlobUrl after treatment*/
       setLocalMediaBlobUrl(null);
       setHandleStopCalled(true); // Ensure handleStop is only called once
     }
   }, [localMediaBlobUrl, mediaBlobUrl, isRecording, handleStopCalled, handleStop]);
 
-  /*Add SpeechRecognition API to start and stop recording with voice commands*/
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -42,7 +40,6 @@ const RecordMessage = ({ handleStop }: Props) => {
       return;
     }
 
-    /*Create a new instance of SpeechRecognition*/
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.lang = 'en-US';
@@ -51,27 +48,36 @@ const RecordMessage = ({ handleStop }: Props) => {
       const transcript = event.results[event.results.length - 1][0].transcript.trim();
       console.log('Transcription: ', transcript);
 
-      /*Add voice commands to start and stop recording*/
+      const now = Date.now();
+      if (now - lastCommandTime < 1000) { // Ignore commands that come within 1 second of each other
+        return;
+      }
+
       if (transcript.toLowerCase() === 'hey jack') {
         console.log('Commande détectée : hey jack');
         startRecording();
         setIsRecording(true);
+        setLastCommandTime(now);
       } else if (transcript.toLowerCase() === 'stop') {
         console.log('Commande détectée : stop');
         stopRecording();
         setIsRecording(false);
+        setLastCommandTime(now);
+        setTimeout(() => {
+          console.log('Lancement de recognition.start');
+          recognition.start();
+        }, 1000); // Restart recognition after 1 second
       }
     };
 
     recognition.start();
+    console.log('Lancement initial de recognition.start');
 
-    /*Stop the recognition when the component is unmounted*/
     return () => {
       recognition.stop();
     };
-  }, [startRecording, stopRecording]);
+  }, [startRecording, stopRecording, lastCommandTime]);
 
-  /*Add the start and stop recording functions*/
   const handleMouseDown = () => {
     startRecording();
     setIsRecording(true);
@@ -82,7 +88,6 @@ const RecordMessage = ({ handleStop }: Props) => {
     setIsRecording(false);
   };
 
-  /*Reset the handleStopCalled state when the recording is started*/
   useEffect(() => {
     if (isRecording) {
       setHandleStopCalled(false);
