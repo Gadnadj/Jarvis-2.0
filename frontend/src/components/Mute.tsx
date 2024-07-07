@@ -141,7 +141,7 @@ const Mute = () => {
     <div className='h-screen overflow-y-hidden'>
       <Title setMessages={setMessages} selectedVoice={selectedVoice} />
       <p className='font-bold text-gray-800 text-center text-3xl'>
-        Mute Communication
+      Mute and Speech-Impaired
       </p>
 
       <div className='absolute top-0 right-12 m-2'>
