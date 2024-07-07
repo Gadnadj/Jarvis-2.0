@@ -60,19 +60,14 @@ const RecordMessage = ({ handleStop }: Props) => {
       console.log('Transcription: ', transcript);
 
       /*Add voice commands to start and stop recording*/
-      if (transcript.toLowerCase() === 'hey rachel')  {
-        console.log('Commande détectée : hey rachel');
+      if (transcript.toLowerCase() === 'hey jack')  {
+        console.log('Commande détectée : hey jack');
         startRecording();
         setIsRecording(true);
       } else if (transcript.toLowerCase() === 'stop') {
         console.log('Commande détectée : stop');
         stopRecording();
         setIsRecording(false);
-      }
-      else if (transcript.toLowerCase() === 'hey jack')  {
-        console.log('Commande détectée : hey jack');
-        startRecording();
-        setIsRecording(true);
       }
     };
 

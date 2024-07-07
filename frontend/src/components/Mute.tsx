@@ -104,6 +104,12 @@ const Mute = () => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleTextSubmit();
+    }
+  };
+
   const toggleDisabilityMenu = () => {
     setIsDisabilityMenuOpen((prev) => !prev);
   };
@@ -141,7 +147,7 @@ const Mute = () => {
     <div className='h-screen overflow-y-hidden'>
       <Title setMessages={setMessages} selectedVoice={selectedVoice} />
       <p className='font-bold text-gray-800 text-center text-3xl'>
-      Mute and Speech-Impaired
+        Mute and Speech-Impaired 
       </p>
 
       <div className='absolute top-0 right-12 m-2'>
@@ -157,7 +163,7 @@ const Mute = () => {
       <div className='text-center mt-3'>
         {availableVoices.map((voice) => (
           <button
-            key={voice.id} 
+            key={voice.id}
             onClick={() => handleVoiceChange(voice.id)}
             className={`mx-2 px-4 py-2 transition duration-300 ease-in-out ${
               selectedVoice === voice.id
@@ -216,6 +222,7 @@ const Mute = () => {
                 type='text'
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyDown} // Add this line to handle Enter key press
                 className='border rounded px-4 py-2 mb-2 w-full'
                 placeholder='Type your message here...'
               />
