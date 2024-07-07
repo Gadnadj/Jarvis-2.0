@@ -8,15 +8,12 @@ interface Props {
 
 /*Create a RecordMessage component to record a message with the user's microphone*/
 const RecordMessage = ({ handleStop }: Props) => {
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({
-      audio: true,
-    });
+  const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
+    audio: true,
+  });
 
   /*Add the localMediaBlobUrl state to store the mediaBlobUrl*/
-  const [localMediaBlobUrl, setLocalMediaBlobUrl] = useState<string | null>(
-    null
-  );
+  const [localMediaBlobUrl, setLocalMediaBlobUrl] = useState<string | null>(null);
 
   /*Set the localMediaBlobUrl to the mediaBlobUrl when the mediaBlobUrl is defined*/
   useEffect(() => {
@@ -29,21 +26,17 @@ const RecordMessage = ({ handleStop }: Props) => {
   const [handleStopCalled, setHandleStopCalled] = useState(false);
 
   useEffect(() => {
-    if (
-      localMediaBlobUrl &&
-      mediaBlobUrl &&
-      !isRecording &&
-      !handleStopCalled
-    ) {
+    if (localMediaBlobUrl && mediaBlobUrl && !isRecording && !handleStopCalled) {
       handleStop(localMediaBlobUrl);
-      /*Reset the localMediaBlobUrl after traitment*/
+      /*Reset the localMediaBlobUrl after treatment*/
       setLocalMediaBlobUrl(null);
+      setHandleStopCalled(true); // Ensure handleStop is only called once
     }
-  }, [localMediaBlobUrl]);
-/*Add SpeechRecogniton API to start and stop recording with voice commands*/
+  }, [localMediaBlobUrl, mediaBlobUrl, isRecording, handleStopCalled, handleStop]);
+
+  /*Add SpeechRecognition API to start and stop recording with voice commands*/
   useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       console.error('Speech Recognition API is not supported in this browser.');
       return;
@@ -55,12 +48,11 @@ const RecordMessage = ({ handleStop }: Props) => {
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.onresult = (event: any) => {
-      const transcript =
-        event.results[event.results.length - 1][0].transcript.trim();
+      const transcript = event.results[event.results.length - 1][0].transcript.trim();
       console.log('Transcription: ', transcript);
 
       /*Add voice commands to start and stop recording*/
-      if (transcript.toLowerCase() === 'hey jack')  {
+      if (transcript.toLowerCase() === 'hey jack') {
         console.log('Commande détectée : hey jack');
         startRecording();
         setIsRecording(true);
@@ -72,14 +64,6 @@ const RecordMessage = ({ handleStop }: Props) => {
     };
 
     recognition.start();
-
-    /*Restart the recognition every 30 seconds*/
-    const restartRecognition = () => {
-      console.log('Restarting speech recognition...');
-      recognition.start();
-    };
-
-    setInterval(restartRecognition, 30000);
 
     /*Stop the recognition when the component is unmounted*/
     return () => {
@@ -113,11 +97,7 @@ const RecordMessage = ({ handleStop }: Props) => {
         className='bg-white p-4 rounded-full shadow-lg'
       >
         <RecordIcon
-          classText={
-            status === 'recording'
-              ? 'animate-pulse text-red-500'
-              : 'text-sky-500'
-          }
+          classText={status === 'recording' ? 'animate-pulse text-red-500' : 'text-sky-500'}
         />
       </button>
       <p className='mt-2 text-white font-light'>{status}</p>
