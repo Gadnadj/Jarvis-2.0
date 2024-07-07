@@ -55,11 +55,11 @@ const Mute = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          responseType: 'text',
+          responseType: 'json', // Ensure we expect a JSON response
         }
       );
 
-      const textResponse = response.data.response;
+      const textResponse = response.data.response; // Ensure response data structure is correct
       const textMessage = { sender: 'Jarvis', content: textResponse };
       setMessages((prevMessages) => [...prevMessages, textMessage]);
     } catch (error) {
@@ -103,11 +103,6 @@ const Mute = () => {
       setIsLoading(false);
     }
   };
-
-  function createBlobURL(data: any) {
-    const blob = new Blob([data], { type: 'audio/mpeg' });
-    return URL.createObjectURL(blob);
-  }
 
   const toggleDisabilityMenu = () => {
     setIsDisabilityMenuOpen((prev) => !prev);

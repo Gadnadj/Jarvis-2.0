@@ -171,9 +171,9 @@ async def post_text_text(file: UploadFile = File(...), voice: str = "Jarvis"):
 
     return chat_response
 
-@app.post("/post-text-game/")
+@app.post("/post-text-game/", response_model=dict)
 async def post_text_game(request: TextRequest):
-        # Log the received text
+    try:
         logging.info(f"Received text: {request.text}")
 
         # Get chat response
@@ -182,8 +182,10 @@ async def post_text_game(request: TextRequest):
         # Store messages
         store_messages(request.text, chat_response)
 
-        return chat_response
-
+        return {"response": chat_response}
+    except Exception as e:
+        logging.error(f"Error occurred: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/post-text-to-text/", response_model=dict)
