@@ -273,6 +273,17 @@ const Mute = () => {
                 />
                 Mute
               </button>
+              <button
+                onClick={() => handleSourdMalentendantOption('mute')}
+                className='block w-full text-left px-4 py-2 hover:bg-gray-100'
+              >
+                <img
+                  src='https://www.virages.com/Images/Categorie_A8/27819-500.gif'
+                  alt='Personnes muettes'
+                  className='w-12 h-12 rounded-full mr-2'
+                />
+                Mute
+              </button>
             </div>
           )}
         </div>
