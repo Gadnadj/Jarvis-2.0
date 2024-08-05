@@ -278,7 +278,7 @@ const Deaf = () => {
                   alt='Personnes muettes'
                   className='w-12 h-12 rounded-full mr-2'
                 />
-                Mute
+                Mute Text Response
               </button>
               <button
                 onClick={() => handleSourdMalentendantOption('mute')}
@@ -289,7 +289,7 @@ const Deaf = () => {
                   alt='Personnes muettes'
                   className='w-12 h-12 rounded-full mr-2'
                 />
-                Mute
+                Mute Audio Response
               </button>
             </div>
           )}
