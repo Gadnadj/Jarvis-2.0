@@ -131,7 +131,6 @@ async def post_audio(file: UploadFile = File(...), voice: str = "Jarvis"):
     logging.debug(f"Converting text to speech with voice: {voice}")
     audio_output = convert_text_to_speech(chat_response, selected_voice=voice)
     print(voice)
-    print(voice)
     # ("audio output {}".format(audio_output))
 
 

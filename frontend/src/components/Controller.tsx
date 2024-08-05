@@ -48,6 +48,7 @@ const Controller = () => {
     setIsLoading(true);
     const myMessage = { sender: 'me', blobUrl };
     const messagesArr = [...messages, myMessage];
+    console.log('im here');
 
     fetch(blobUrl)
       .then((res) => res.blob())
@@ -264,7 +265,7 @@ const Controller = () => {
                   alt='Sourds et malentendants'
                   className='w-12 h-12 rounded-full mr-2'
                 />
-                Sourds
+                Deaf
               </button>
               <button
                 onClick={() => handleSourdMalentendantOption('mute')}
@@ -275,7 +276,7 @@ const Controller = () => {
                   alt='Personnes muettes'
                   className='w-12 h-12 rounded-full mr-2'
                 />
-                Muets
+                Mute
               </button>
             </div>
           )}
