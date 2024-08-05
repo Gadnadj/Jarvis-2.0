@@ -139,9 +139,9 @@ const Mute = () => {
     if (option === 'deaf') {
       navigate('/deaf');
     } 
-    if(option === '/mute-audio')
+    if(option === 'mute-audio')
     {
-      navigate('//mute-audio');
+      navigate('/mute-audio');
     }
     else if (option === 'mute-text') {
       navigate('/mute-text');
