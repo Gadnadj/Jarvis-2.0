@@ -148,7 +148,11 @@ const Deaf = () => {
   const handleSourdMalentendantOption = (option: string) => {
     if (option === 'deaf') {
       navigate('/deaf');
-    } else if (option === 'mute') {
+    } 
+    if (option === 'mute-audio') {
+      navigate('/mute-audio');
+    }
+    else if (option === 'mute') {
       navigate('/mute');
     }
   };
@@ -281,7 +285,7 @@ const Deaf = () => {
                 Mute Text Response
               </button>
               <button
-                onClick={() => handleSourdMalentendantOption('mute')}
+                onClick={() => handleSourdMalentendantOption('mute-audio')}
                 className='block w-full text-left px-4 py-2 hover:bg-gray-100'
               >
                 <img
