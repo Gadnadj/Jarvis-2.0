@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from './Title';
 import axios from 'axios';
-import RecordMessage from './RecordMessage';
 import Select, { SingleValue } from 'react-select';
 import { ActionMeta } from 'react-select';
 
@@ -14,6 +12,7 @@ const MuteAudio = () => {
   const [selectedVoice, setSelectedVoice] = useState('Jarvis');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
+  const [inputText, setInputText] = useState('');
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
@@ -121,6 +120,50 @@ const MuteAudio = () => {
     }
   };
 
+  const handleTextSubmit = async () => {
+    if (!inputText) return;
+
+    setIsLoading(true);
+
+    // Ajouter le message de l'utilisateur à la liste des messages
+    const userMessage = { sender: 'Me', content: inputText, type: 'text' };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+    try {
+      const voice = selectedVoice;
+
+      const response = await axios.post(
+        'http://localhost:8000/post-text',
+        { text: inputText, voice },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          responseType: 'blob',
+        }
+      );
+
+      const audioUrl = createBlobURL(response.data);
+      const audioMessage = { sender: 'Jarvis', blobUrl: audioUrl, type: 'audio' };
+      setMessages((prevMessages) => [...prevMessages, audioMessage]);
+
+      setInputText(''); // Effacer le champ de saisie après l'envoi du message
+
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error('Erreur lors de la soumission du texte:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleTextSubmit();
+    }
+  };
+
   const toggleDisabilityMenu = () => {
     setIsDisabilityMenuOpen((prev) => !prev);
   };
@@ -149,14 +192,19 @@ const MuteAudio = () => {
   const handleSourdMalentendantOption = (option: string) => {
     if (option === 'deaf') {
       navigate('/deaf');
-    } else if (option === 'mute') {
-      navigate('/mute');
+    } else if (option === 'mute-text') {
+      navigate('/mute-text');
+    } else if (option === 'mute-audio') {
+      navigate('/mute-audio');
     }
   };
 
   return (
     <div className='h-screen overflow-y-hidden'>
       <Title setMessages={setMessages} selectedVoice={selectedVoice} />
+      <p className='font-bold text-gray-800 text-center text-3xl'>
+        Mute and Speech-Impaired 
+      </p>
 
       <div className='absolute top-0 right-12 m-2'>
         <Select
@@ -190,31 +238,28 @@ const MuteAudio = () => {
 
       <div className='flex flex-col justify-between h-full overflow-y-scroll pb-96'>
         <div className='mt-5 px-5'>
-          {messages?.map((audio, index) => (
+          {messages?.map((message, index) => (
             <div
-              key={index + audio.sender}
+              key={index + message.sender}
               className={`flex flex-col ${
-                audio.sender === 'Jarvis' ? 'items-end' : ''
-              } ${audio.sender === 'Antoni' ? 'items-end' : ''} ${
-                audio.sender === 'Sarah' ? 'items-end' : ''
-              } ${audio.sender === 'Shaun' ? 'items-end' : ''}`}
+                message.sender === 'Jarvis' ? 'items-end' : 'items-start'
+              }`}
             >
               <div className='mt-4'>
                 <p
                   className={
-                    audio.sender === 'Jarvis' || audio.sender === 'Antoni'
+                    message.sender === 'Jarvis'
                       ? 'text-right mr-2 italic text-pink-500'
                       : 'ml-2 italic text-blue-500'
                   }
                 >
-                  {audio.sender}
+                  {message.sender}
                 </p>
-
-                <audio
-                  src={audio.blobUrl}
-                  className='appearance-none'
-                  controls
-                />
+                {message.type === 'text' ? (
+                  <p className='ml-2'>{message.content}</p>
+                ) : (
+                  <audio src={message.blobUrl} className='appearance-none' controls />
+                )}
               </div>
             </div>
           ))}
@@ -234,8 +279,21 @@ const MuteAudio = () => {
 
         <div className='fixed bottom-0 w-full py-6 border-t text-center bg-gradient-to-r from-sky-500 to-indigo-500'>
           <div className='flex justify-center items-center w-full'>
-            <div>
-              <RecordMessage handleStop={handleStop} />
+            <div className='flex flex-col items-center w-full px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto'>
+              <input
+                type='text'
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyDown} // Add this line to handle Enter key press
+                className='border rounded px-4 py-2 mb-2 w-full'
+                placeholder='Type your message here...'
+              />
+              <button
+                onClick={handleTextSubmit}
+                className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full'
+              >
+                Send Message
+              </button>
             </div>
           </div>
         </div>
@@ -268,7 +326,7 @@ const MuteAudio = () => {
                 Deaf
               </button>
               <button
-                onClick={() => handleSourdMalentendantOption('mute')}
+                onClick={() => handleSourdMalentendantOption('mute-text')}
                 className='block w-full text-left px-4 py-2 hover:bg-gray-100'
               >
                 <img
@@ -279,7 +337,7 @@ const MuteAudio = () => {
                 Mute Text Response
               </button>
               <button
-                onClick={() => handleSourdMalentendantOption('mute')}
+                onClick={() => handleSourdMalentendantOption('mute-audio')}
                 className='block w-full text-left px-4 py-2 hover:bg-gray-100'
               >
                 <img

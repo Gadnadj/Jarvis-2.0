@@ -203,3 +203,33 @@ async def post_text(request: TextRequest):
     except Exception as e:
         logging.error(f"Error occurred: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/post-text-to-audio/", response_model=dict)
+async def post_text_to_audio(request: TextRequest):
+    try:
+        logging.info(f"Texte reçu: {request.text}")
+
+        # Obtenez la réponse du chat
+        chat_response = get_chat_response(request.text)
+        logging.info(f"Réponse du chat: {chat_response}")
+
+        # Stockez les messages
+        store_messages(request.text, chat_response)
+        
+        # Convertissez la réponse du chat en audio
+        audio_output = convert_text_to_speech(chat_response, selected_voice=request.voice)
+        
+        if not chat_response:
+            raise HTTPException(status_code=400, detail="Échec de la réponse du chat")
+        if not audio_output:
+            raise HTTPException(status_code=400, detail="Échec de la conversion audio")
+
+        # Créez un générateur qui renvoie des morceaux de données
+        def iterfile():
+            yield audio_output
+        
+        # Retournez l'audio de sortie
+        return StreamingResponse(iterfile(), media_type="application/octet-stream")
+    except Exception as e:
+        logging.error(f"Erreur survenue: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

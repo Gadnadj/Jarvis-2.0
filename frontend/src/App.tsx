@@ -11,7 +11,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Controller />} />
         <Route path='/deaf' element={<Deaf />} />
-        <Route path='/mute' element={<Mute />} />
+        <Route path='/mute-text' element={<Mute />} />
         <Route path='/mute-audio' element={<MuteAudio />} />
       </Routes>
     </Router>
