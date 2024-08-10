@@ -9,14 +9,14 @@ const Mute = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState('Jarvis');
+  const [selectedVoice, setSelectedVoice] = useState('Jack');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
-    { id: 'Jarvis', name: 'Jarvis' },
+    { id: 'Jack', name: 'Jack' },
     { id: 'Shaun', name: 'Shaun' },
     { id: 'Antoni', name: 'Antoni' },
     { id: 'Sarah', name: 'Sarah' },
@@ -60,7 +60,7 @@ const Mute = () => {
       );
 
       const textResponse = response.data.response; // Ensure response data structure is correct
-      const textMessage = { sender: 'Jarvis', content: textResponse };
+      const textMessage = { sender: 'Jack', content: textResponse };
       setMessages((prevMessages) => [...prevMessages, textMessage]);
     } catch (error) {
       console.error('Error occurred during game selection post:', error);
@@ -93,7 +93,7 @@ const Mute = () => {
       );
 
       const textResponse = response.data.response;
-      const textMessage = { sender: 'Jarvis', content: textResponse };
+      const textMessage = { sender: 'Jack', content: textResponse };
       setMessages((prevMessages) => [...prevMessages, textMessage]);
 
       setInputText(''); // Clear the input field after sending the message
@@ -152,7 +152,7 @@ const Mute = () => {
     <div className='h-screen overflow-y-hidden'>
       <Title setMessages={setMessages} selectedVoice={selectedVoice} />
       <p className='font-bold text-gray-800 text-center text-3xl'>
-        Mute and Speech-Impaired 
+        Mute and Speech-Impaired / Text
       </p>
 
       <div className='absolute top-0 right-12 m-2'>
@@ -190,10 +190,10 @@ const Mute = () => {
           {messages?.map((message, index) => (
             <div
               key={index}
-              className={`flex flex-col ${message.sender === 'Jarvis' ? 'items-end' : 'items-start'}`}
+              className={`flex flex-col ${message.sender === 'Jack' ? 'items-end' : 'items-start'}`}
             >
               <div className='mt-4'>
-                {message.sender === 'Jarvis' ? (
+                {message.sender === 'Jack' ? (
                   <div className='text-right mr-2 italic text-pink-500'>
                     {message.sender}
                   </div>

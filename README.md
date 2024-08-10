@@ -46,7 +46,7 @@ yarn dev
 
 Open your browser and go to http://localhost:5173/.
 
-Experience the interactive Jarvis Smart Speaker on your local environment! 🚀
+Experience the interactive Jack Smart Speaker on your local environment! 🚀
 
 ![All components of the speaker](https://hackster.imgix.net/uploads/attachments/981698/1_9Ovnzl7yNZJsbMgM7Q6tdA.jpeg?auto=compress%2Cformat&w=740&h=555&fit=max)
 

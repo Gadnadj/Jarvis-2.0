@@ -9,14 +9,14 @@ const MuteAudio = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState('Jarvis');
+  const [selectedVoice, setSelectedVoice] = useState('Jack');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
-    { id: 'Jarvis', name: 'Jarvis' },
+    { id: 'Jack', name: 'Jack' },
     { id: 'Shaun', name: 'Shaun' },
     { id: 'Antoni', name: 'Antoni' },
     { id: 'Sarah', name: 'Sarah' },
@@ -108,7 +108,7 @@ const MuteAudio = () => {
       );
 
       const audioUrl = createBlobURL(response.data);
-      const audioMessage = { sender: 'Jarvis', blobUrl: audioUrl };
+      const audioMessage = { sender: 'Jack', blobUrl: audioUrl };
       setMessages((prevMessages) => [...prevMessages, audioMessage]);
 
       const audio = new Audio(audioUrl);
@@ -144,7 +144,7 @@ const MuteAudio = () => {
       );
 
       const audioUrl = createBlobURL(response.data);
-      const audioMessage = { sender: 'Jarvis', blobUrl: audioUrl, type: 'audio' };
+      const audioMessage = { sender: 'Jack', blobUrl: audioUrl, type: 'audio' };
       setMessages((prevMessages) => [...prevMessages, audioMessage]);
 
       setInputText(''); // Effacer le champ de saisie après l'envoi du message
@@ -203,7 +203,7 @@ const MuteAudio = () => {
     <div className='h-screen overflow-y-hidden'>
       <Title setMessages={setMessages} selectedVoice={selectedVoice} />
       <p className='font-bold text-gray-800 text-center text-3xl'>
-        Mute and Speech-Impaired 
+        Mute and Speech-Impaired / Audio
       </p>
 
       <div className='absolute top-0 right-12 m-2'>
@@ -242,13 +242,13 @@ const MuteAudio = () => {
             <div
               key={index + message.sender}
               className={`flex flex-col ${
-                message.sender === 'Jarvis' ? 'items-end' : 'items-start'
+                message.sender === 'Jack' ? 'items-end' : 'items-start'
               }`}
             >
               <div className='mt-4'>
                 <p
                   className={
-                    message.sender === 'Jarvis'
+                    message.sender === 'Jack'
                       ? 'text-right mr-2 italic text-pink-500'
                       : 'ml-2 italic text-blue-500'
                   }

@@ -11,13 +11,13 @@ const Controller = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState('Jarvis');
+  const [selectedVoice, setSelectedVoice] = useState('Jack');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
-    { id: 'Jarvis', name: 'Jarvis' },
+    { id: 'Jack', name: 'Jack' },
     { id: 'Shaun', name: 'Shaun' },
     { id: 'Antoni', name: 'Antoni' },
     { id: 'Sarah', name: 'Sarah' },
@@ -109,7 +109,7 @@ const Controller = () => {
       );
 
       const audioUrl = createBlobURL(response.data);
-      const audioMessage = { sender: 'Jarvis', blobUrl: audioUrl };
+      const audioMessage = { sender: 'Jack', blobUrl: audioUrl };
       setMessages((prevMessages) => [...prevMessages, audioMessage]);
 
       const audio = new Audio(audioUrl);
@@ -199,7 +199,7 @@ const Controller = () => {
             <div
               key={index + audio.sender}
               className={`flex flex-col ${
-                audio.sender === 'Jarvis' ? 'items-end' : ''
+                audio.sender === 'Jack' ? 'items-end' : ''
               } ${audio.sender === 'Antoni' ? 'items-end' : ''} ${
                 audio.sender === 'Sarah' ? 'items-end' : ''
               } ${audio.sender === 'Shaun' ? 'items-end' : ''}`}
@@ -207,7 +207,7 @@ const Controller = () => {
               <div className='mt-4'>
                 <p
                   className={
-                    audio.sender === 'Jarvis' || audio.sender === 'Antoni'
+                    audio.sender === 'Jack' || audio.sender === 'Antoni'
                       ? 'text-right mr-2 italic text-pink-500'
                       : 'ml-2 italic text-blue-500'
                   }

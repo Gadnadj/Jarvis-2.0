@@ -103,7 +103,7 @@ async def post_text(request: TextRequest):
 # Post bot response
 # Note: Not playing back in browser when using post request.
 @app.post("/post-audio/")
-async def post_audio(file: UploadFile = File(...), voice: str = "Jarvis"):
+async def post_audio(file: UploadFile = File(...), voice: str = "Jack"):
     # Convert audio to text - production
     # Save the file temporarily
     with open(file.filename, "wb") as buffer:
@@ -148,7 +148,7 @@ async def post_audio(file: UploadFile = File(...), voice: str = "Jarvis"):
     return StreamingResponse(iterfile(), media_type="application/octet-stream")
 
 @app.post("/post-text-text/")
-async def post_text_text(file: UploadFile = File(...), voice: str = "Jarvis"):
+async def post_text_text(file: UploadFile = File(...), voice: str = "Jack"):
     # Convert audio to text - production
     # Save the file temporarily
     with open(file.filename, "wb") as buffer:

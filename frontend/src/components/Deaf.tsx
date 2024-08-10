@@ -10,13 +10,13 @@ const Deaf = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState('Jarvis');
+  const [selectedVoice, setSelectedVoice] = useState('Jack');
   const [selectedGame, setSelectedGame] = useState(null);
   const [isDisabilityMenuOpen, setIsDisabilityMenuOpen] = useState(false);
   const disabilityMenuRef = useRef<HTMLDivElement>(null);
 
   const availableVoices = [
-    { id: 'Jarvis', name: 'Jarvis' },
+    { id: 'Jack', name: 'Jack' },
     { id: 'Shaun', name: 'Shaun' },
     { id: 'Antoni', name: 'Antoni' },
     { id: 'Sarah', name: 'Sarah' },
@@ -61,7 +61,7 @@ const Deaf = () => {
 
       // Assuming response.data contains the text response from the server
       const textResponse = response.data;
-      const textMessage = { sender: 'Jarvis', content: textResponse }; // Use content instead of blobUrl for text messages
+      const textMessage = { sender: 'Jack', content: textResponse }; // Use content instead of blobUrl for text messages
       setMessages((prevMessages) => [...prevMessages, textMessage]);
     } catch (error) {
       console.error('Error occurred during game selection post:', error);
@@ -101,7 +101,7 @@ const Deaf = () => {
 
           // Add the transcribed text to messages
           const speakerMessage = {
-            sender: 'Jarvis', // Assuming the response is from the Jarvis AI
+            sender: 'Jack', // Assuming the response is from the Jack AI
             content: transcribedText,
           };
           messagesArr.push(speakerMessage);
@@ -200,11 +200,11 @@ const Deaf = () => {
             <div
               key={index}
               className={`flex flex-col ${
-                message.sender === 'Jarvis' ? 'items-end' : ''
+                message.sender === 'Jack' ? 'items-end' : ''
               }`}
             >
               <div className='mt-4'>
-                {message.sender === 'Jarvis' ? (
+                {message.sender === 'Jack' ? (
                   <div className='text-right mr-2 italic text-pink-500'>
                     {message.sender}
                   </div>
