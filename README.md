@@ -1,7 +1,7 @@
 # Smart Speaker
 
 # Installation
-Clone the project from my GitHub account: https://github.com/Gadnadj/SmartSpeaker.git
+Clone the project from my GitHub account: https://github.com/Gadnadj/Jarvis-2.0.git
 
 Create a terminal and git clone the project by entering this line: 
 git clone https://github.com/Gadnadj/SmartSpeaker.git
