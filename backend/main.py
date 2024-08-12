@@ -209,14 +209,14 @@ async def post_text_to_audio(request: TextRequest):
     try:
         logging.info(f"Texte reçu: {request.text}")
 
-        # Obtenez la réponse du chat
+        # Chat response
         chat_response = get_chat_response(request.text)
         logging.info(f"Réponse du chat: {chat_response}")
 
-        # Stockez les messages
+        # stock messages
         store_messages(request.text, chat_response)
         
-        # Convertissez la réponse du chat en audio
+        # Convert chat response to audio
         audio_output = convert_text_to_speech(chat_response, selected_voice=request.voice)
         
         if not chat_response:
@@ -224,11 +224,11 @@ async def post_text_to_audio(request: TextRequest):
         if not audio_output:
             raise HTTPException(status_code=400, detail="Échec de la conversion audio")
 
-        # Créez un générateur qui renvoie des morceaux de données
+        # Create a generator that returns chunks of data
         def iterfile():
             yield audio_output
         
-        # Retournez l'audio de sortie
+        # Return output audio
         return StreamingResponse(iterfile(), media_type="application/octet-stream")
     except Exception as e:
         logging.error(f"Erreur survenue: {e}")
