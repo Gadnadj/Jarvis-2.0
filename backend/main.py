@@ -19,7 +19,7 @@ from functions.database import store_messages, reset_messages
 
 ## Set your OpenAI credentials directly
 openai.organization = "org-MJBa6RAUrspCcq6sxiMr7KXZ"
-openai.api_key = "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"
+openai.api_key = "sk-OFjlX2RSgDqMOfSrWhi2S0zBPzAfo-06xG3_uB4YeKT3BlbkFJoZcIFD6gsyLyL9W57Af47B5bTvbeLDAWKLUOXHlCQA"
 
 # Initiate App
 app = FastAPI()
