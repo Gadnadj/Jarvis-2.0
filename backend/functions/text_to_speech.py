@@ -1,9 +1,15 @@
 import requests
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
-ELEVEN_LABS_API_KEY = "3b713e13198c8fc388c2981500998efe"
-# 1ns94GwK9YDCJoL6Nglv Nicolas
-# AmMsHJaCw4BtwV3KoUXF Sam
+# Vérifiez que les variables d'environnement sont bien chargées
+print(f"Organization ID: {os.getenv('ELEVEN_LABS_API_KEY')}")
+print(f"API Key: {os.getenv('OPENAI_API_KEY')}")
+
+ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
+
 def convert_text_to_speech(message, selected_voice):
     body = {"text": message, "voice_settings": {"stability": 0, "similarity_boost": 0}}
 
