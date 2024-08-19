@@ -9,6 +9,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import openai
 import logging
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# Vérifiez que les variables d'environnement sont bien chargées
+print(f"Organization ID: {os.getenv('OPENAI_ORG_ID')}")
+print(f"API Key: {os.getenv('OPENAI_API_KEY')}")
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -18,8 +26,9 @@ from functions.openai_requests import convert_audio_to_text, get_chat_response
 from functions.database import store_messages, reset_messages
 
 ## Set your OpenAI credentials directly
-openai.organization = "org-MJBa6RAUrspCcq6sxiMr7KXZ"
-openai.api_key = "sk-OFjlX2RSgDqMOfSrWhi2S0zBPzAfo-06xG3_uB4YeKT3BlbkFJoZcIFD6gsyLyL9W57Af47B5bTvbeLDAWKLUOXHlCQA"
+openai.organization = os.getenv("OPENAI_ORG_ID")
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 # Initiate App
 app = FastAPI()
